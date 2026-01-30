@@ -21,7 +21,7 @@
 plugins {
     java
     application
-    id("com.teamdev.jxbrowser") version "2.0.0"
+    id("com.teamdev.jxbrowser") version "1.2.1"
 }
 
 group = "com.teamdev.jxbrowser.examples"
@@ -36,7 +36,7 @@ java {
 }
 
 jxbrowser {
-    version = "8.14.0"
+    version = "8.16.1"
 }
 
 repositories {
