@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+bin/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# JxBrowser runtime data
+jxbrowser-user-data/
+cookies.dat
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Angular
+.angular/
+dist/
+
+# Logs
+*.log
