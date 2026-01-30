@@ -29,15 +29,6 @@ import java.util.List;
 
 /**
  * Java backend service that provides data for the Angular Dashboard.
- *
- * <p>This class is injected into the browser's window object via JxBrowser's
- * JavaScript-Java Bridge. The Angular frontend can call these methods directly
- * through {@code window.backend.methodName()}.
- *
- * <p>All methods return JSON strings that the frontend parses using {@code JSON.parse()}.
- *
- * <p>The {@link JsAccessible} annotation is required for JxBrowser to expose
- * the public methods to JavaScript. Without it, JavaScript cannot call Java methods.
  */
 @JsAccessible
 public class DashboardBackend {
@@ -45,7 +36,7 @@ public class DashboardBackend {
     private final Gson gson = new GsonBuilder().create();
 
     /**
-     * Returns the top statistics cards data as a JSON string.
+     * Returns the top statistics cards data as JSON.
      */
     public String getTopCards() {
         List<TopCard> cards = Arrays.asList(
@@ -58,7 +49,7 @@ public class DashboardBackend {
     }
 
     /**
-     * Returns the activity feeds data as a JSON string.
+     * Returns the activity feeds data as JSON.
      */
     public String getFeeds() {
         List<Feed> feeds = Arrays.asList(
@@ -73,7 +64,7 @@ public class DashboardBackend {
     }
 
     /**
-     * Returns the projects table data as a JSON string.
+     * Returns the projects table data as JSON.
      */
     public String getProjects() {
         List<Project> projects = Arrays.asList(
@@ -90,7 +81,7 @@ public class DashboardBackend {
     }
 
     /**
-     * Returns the sales summary data as a JSON string.
+     * Returns the sales summary data as JSON.
      */
     public String getSalesSummary() {
         SalesSummary summary = new SalesSummary("$10,345", "$7,545", "$1,345");
@@ -98,23 +89,19 @@ public class DashboardBackend {
     }
 
     /**
-     * Returns the chart series data as a JSON string.
-     * 
-     * @param timeRange the time range: "3m" (3 months), "30d" (30 days), or "7d" (7 days)
+     * Returns the chart series data as JSON.
      */
     public String getChartData(String timeRange) {
         List<ChartSeries> series;
-        
+
         switch (timeRange) {
             case "7d":
-                // Last 7 days - daily data
                 series = Arrays.asList(
                         new ChartSeries("Desktop", new int[]{186, 305, 237, 173, 209, 214, 186}),
                         new ChartSeries("Mobile", new int[]{80, 120, 95, 85, 110, 98, 76})
                 );
                 break;
             case "30d":
-                // Last 30 days - weekly data
                 series = Arrays.asList(
                         new ChartSeries("Desktop", new int[]{1250, 1380, 1520, 1420}),
                         new ChartSeries("Mobile", new int[]{620, 710, 680, 750})
@@ -122,18 +109,15 @@ public class DashboardBackend {
                 break;
             case "3m":
             default:
-                // Last 3 months - monthly data
                 series = Arrays.asList(
                         new ChartSeries("Desktop", new int[]{31, 40, 28, 51, 42, 109, 100}),
                         new ChartSeries("Mobile", new int[]{11, 32, 45, 32, 34, 52, 41})
                 );
                 break;
         }
-        
+
         return gson.toJson(series);
     }
-
-    // ============ Data Transfer Objects ============
 
     private record TopCard(String bgcolor, String icon, String title, String subtitle) {}
 
@@ -146,6 +130,3 @@ public class DashboardBackend {
 
     private record ChartSeries(String name, int[] data) {}
 }
-
-
-

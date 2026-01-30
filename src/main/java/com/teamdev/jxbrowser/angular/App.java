@@ -23,10 +23,6 @@ package com.teamdev.jxbrowser.angular;
 /**
  * A hybrid desktop application demonstrating how to combine
  * an Angular web-based user interface with Java business logic.
- *
- * <p>The application creates a Swing window embedding a JxBrowser web view
- * that loads an Angular Dashboard frontend. Communication between the UI
- * and Java is handled via the JxBrowser JavaScript-Java Bridge.
  */
 public final class App {
 
@@ -34,11 +30,3 @@ public final class App {
         new AppInitializer().initialize();
     }
 }
-
-
-
-
-
-
-
-

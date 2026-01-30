@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Application configuration including URLs, paths, and mode detection.
+ * Application details such as URLs, paths, and mode detection.
  */
 public enum AppDetails {
     INSTANCE;
@@ -54,10 +54,6 @@ public enum AppDetails {
 
     /**
      * Returns the URL of the application frontend.
-     *
-     * <p>In development mode, returns the Angular dev server URL.
-     * In production mode, returns a custom scheme URL that will be
-     * intercepted to load resources from the JAR.
      */
     public static String appUrl() {
         return isDevMode()
@@ -81,9 +77,6 @@ public enum AppDetails {
 
     /**
      * Indicates if the application is running in development mode.
-     *
-     * <p>Development mode is enabled by setting the system property
-     * {@code app.dev.mode=true}.
      */
     public static boolean isDevMode() {
         return "true".equals(System.getProperty("app.dev.mode"));
@@ -103,11 +96,3 @@ public enum AppDetails {
         return appDataDir;
     }
 }
-
-
-
-
-
-
-
-

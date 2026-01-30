@@ -30,21 +30,12 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- * Intercepts URL requests with the custom scheme and loads web resources
- * from the JAR file in production mode.
- *
- * <p>This allows the Angular application to be bundled inside the JAR
- * and loaded without requiring an external web server.
+ * Intercepts URL requests and loads web resources from the JAR file.
  */
 public final class UrlRequestInterceptor implements InterceptUrlRequestCallback {
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String INDEX_HTML = "/index.html";
-
-    /**
-     * The root path inside the JAR where web resources are located.
-     * Angular build output is placed in this directory.
-     */
     private static final String CONTENT_ROOT = "/web";
 
     @Override
@@ -55,54 +46,34 @@ public final class UrlRequestInterceptor implements InterceptUrlRequestCallback 
         if (url.startsWith(expectedUrlPrefix)) {
             var uri = URI.create(url);
             var path = uri.getPath();
-
-            String fileName;
-            if (path.equals("/")) {
-                fileName = INDEX_HTML;
-            } else {
-                fileName = path;
-            }
-
+            var fileName = path.equals("/") ? INDEX_HTML : path;
             return loadResource(params, fileName);
         }
 
         return Response.proceed();
     }
 
-    /**
-     * Loads a resource from the JAR and returns the appropriate response.
-     *
-     * @param params   the request parameters
-     * @param fileName the file name to load
-     * @return the response with the resource content or an error status
-     */
     private Response loadResource(Params params, String fileName) {
         var resourcePath = CONTENT_ROOT + fileName;
 
         try (var stream = getClass().getResourceAsStream(resourcePath)) {
             if (stream == null) {
-                // Resource not found, return 404.
                 var job = createUrlRequestJob(params, HttpStatus.NOT_FOUND, fileName);
                 job.complete();
                 return Response.intercept(job);
             }
 
-            // Resource found, return 200 with content.
             var job = createUrlRequestJob(params, HttpStatus.OK, fileName);
             job.write(stream.readAllBytes());
             job.complete();
             return Response.intercept(job);
         } catch (IOException e) {
-            // Read failed, return 500.
             var job = createUrlRequestJob(params, HttpStatus.INTERNAL_SERVER_ERROR, fileName);
             job.complete();
             return Response.intercept(job);
         }
     }
 
-    /**
-     * Creates a URL request job with the specified status and content type.
-     */
     private UrlRequestJob createUrlRequestJob(Params params, HttpStatus status, String fileName) {
         var builder = UrlRequestJob.Options.newBuilder(status);
         builder.addHttpHeader(HttpHeader.of(CONTENT_TYPE, MimeTypes.mimeType(fileName).value()));

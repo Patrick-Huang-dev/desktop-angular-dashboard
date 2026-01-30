@@ -30,9 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Utility class for mapping file extensions to MIME types.
- * 
- * <p>MIME types are loaded from the {@code mime-types.properties} resource file.
+ * Maps file extensions to MIME types.
  */
 public final class MimeTypes {
 
@@ -40,14 +38,10 @@ public final class MimeTypes {
     private static final Map<String, MimeType> MIME_TYPE_MAP = loadMimeTypes();
 
     private MimeTypes() {
-        // Prevent instantiation
     }
 
     /**
-     * Returns the MIME type for the given file path based on its extension.
-     *
-     * @param filePath the file path or name
-     * @return the corresponding MIME type, or a default type if unknown
+     * Returns the MIME type for the given file path.
      */
     public static MimeType mimeType(String filePath) {
         int lastDot = filePath.lastIndexOf('.');
@@ -59,26 +53,22 @@ public final class MimeTypes {
         return MIME_TYPE_MAP.getOrDefault(extension, DEFAULT_MIME_TYPE);
     }
 
-    /**
-     * Loads MIME types from the properties file.
-     */
     private static Map<String, MimeType> loadMimeTypes() {
         Map<String, MimeType> mimeTypes = new HashMap<>();
         URL propsUrl = MimeTypes.class.getClassLoader().getResource("mime-types.properties");
-        
+
         if (propsUrl != null) {
             Properties props = new Properties();
             try (InputStream inputStream = propsUrl.openStream()) {
                 props.load(inputStream);
-                props.forEach((key, value) -> 
-                    mimeTypes.put(key.toString(), MimeType.of(value.toString()))
+                props.forEach((key, value) ->
+                        mimeTypes.put(key.toString(), MimeType.of(value.toString()))
                 );
             } catch (IOException e) {
                 System.err.println("Failed to load mime-types.properties: " + e.getMessage());
             }
         } else {
             System.err.println("mime-types.properties not found, using defaults");
-            // Fallback to essential MIME types
             mimeTypes.put("html", MimeType.of("text/html"));
             mimeTypes.put("htm", MimeType.of("text/html"));
             mimeTypes.put("css", MimeType.of("text/css"));
@@ -94,7 +84,7 @@ public final class MimeTypes {
             mimeTypes.put("woff2", MimeType.of("font/woff2"));
             mimeTypes.put("ttf", MimeType.of("font/ttf"));
         }
-        
+
         return mimeTypes;
     }
 }
